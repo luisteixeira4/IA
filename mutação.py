@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from random import randint
-from string import maketrans
+from string import ascii_letters, digits
 
 class AlgoritmoGenetico():
     """
@@ -62,27 +62,27 @@ class AlgoritmoGenetico():
 
     def selecionar(self):
         """
-            Realiza a seleção do individuo mais apto por torneio, considerando N = 2
+            Realiza a seleção do indivíduo mais apto por torneio, considerando N = 2
         """
-        # agrupa os individuos com suas avaliações para gerar os participantes do torneio
-        participantes_torneio = zip(self.populacao, self.avaliacao)
-        # escolhe dois individuos aleatoriamente
+        # Agrupa os indivíduos com suas avaliações para gerar os participantes do torneio
+        participantes_torneio = list(zip(self.populacao, self.avaliacao))
+        # Escolhe dois indivíduos aleatoriamente
         individuo_1 = participantes_torneio[randint(0, self.tam_populacao - 1)]
         individuo_2 = participantes_torneio[randint(0, self.tam_populacao - 1)]
-        # retorna individuo com a maior avaliação, ou seja, o vencedor do torneio
+        # Retorna o indivíduo com a maior avaliação, ou seja, o vencedor do torneio
         return individuo_1[0] if individuo_1[1] >= individuo_2[1] else individuo_2[0]
 
     def _ajustar(self, individuo):
         """
-            Caso o individuo esteja fora dos limites de x, ele é ajustado de acordo com o limite mais próximo
+            Caso o indivíduo esteja fora dos limites de x, ele é ajustado de acordo com o limite mais próximo
         """
         if int(''.join(individuo), 2) < self.x_min:
-            # se o individuo é menor que o limite mínimo, ele é substituido pelo próprio limite mínimo
+            # se o indivíduo é menor que o limite mínimo, ele é substituído pelo próprio limite mínimo
             ajuste = bin(self.x_min).replace('0b', '' if self.x_min < 0 else '+').zfill(self.num_bits)
             for indice, bit in enumerate(ajuste):
                 individuo[indice] = bit
         elif int(''.join(individuo), 2) > self.x_max:
-            # se o individuo é maior que o limite máximo, ele é substituido pelo próprio limite máximo
+            # se o indivíduo é maior que o limite máximo, ele é substituído pelo próprio limite máximo
             ajuste = bin(self.x_max).replace('0b', '' if self.x_max < 0 else '+').zfill(self.num_bits)
             for indice, bit in enumerate(ajuste):
                 individuo[indice] = bit
@@ -110,25 +110,25 @@ class AlgoritmoGenetico():
 
     def mutar(self, individuo):
         """
-            Realiza a mutação dos bits de um indiviuo conforme uma dada probabilidade
+            Realiza a mutação dos bits de um indivíduo conforme uma dada probabilidade
             (taxa de mutação)
         """
         # cria a tabela com as regras de mutação
-        tabela_mutacao = maketrans('+-01', '-+10')
+        tabela_mutacao = str.maketrans('+-01', '-+10')
         # caso a taxa de mutação seja atingida, ela é realizada em um bit aleatório
         if randint(1,100) <= self.taxa_mutacao:
             bit = randint(0, self.num_bits - 1)
             individuo[bit] = individuo[bit].translate(tabela_mutacao)
 
-        # se o individuo estiver fora dos limites de x, ele é ajustado de acordo com o
+        # se o indivíduo estiver fora dos limites de x, ele é ajustado de acordo com o
         # limite mais próximo
         self._ajustar(individuo)
 
-    def econtrar_filho_mais_apto(self):
+    def encontrar_filho_mais_apto(self):
         """
-            Busca o individuo com a melhor avaliação dentro da população
+            Busca o indivíduo com a melhor avaliação dentro da população
         """
-        # agrupa os individuos com suas avaliações para gerar os candidatos
+        # agrupa os indivíduos com suas avaliações para gerar os candidatos
         candidatos = zip(self.populacao, self.avaliacao)
         # retorna o candidato com a melhor avaliação, ou seja, o mais apto da população
         return max(candidatos, key=lambda elemento: elemento[1])
@@ -136,13 +136,13 @@ class AlgoritmoGenetico():
 
 def main():
     # cria uma instância do algoritmo genético com as configurações do enunciado
-    algoritmo_genetico = AlgoritmoGenetico(-10, 10, 30, 1, 70, 50)
+    algoritmo_genetico = AlgoritmoGenetico(-10, 10, 4, 1, 60, 15)
     # realiza a avaliação da população inicial
     algoritmo_genetico.avaliar()
     # executa o algoritmo por "num_gerações"
     for i in range(algoritmo_genetico.num_geracoes):
         # imprime o resultado a cada geração, começando da população original
-        print( 'Resultado {}: {}'.format(i, algoritmo_genetico.econtrar_filho_mais_apto()) )
+        print( 'Resultado {}: {}'.format(i, algoritmo_genetico.encontrar_filho_mais_apto()) )
         # cria uma nova população e a preenche enquanto não estiver completa
         nova_populacao = []
         while len(nova_populacao) < algoritmo_genetico.tam_populacao:
@@ -161,7 +161,7 @@ def main():
         algoritmo_genetico.avaliar()
 
     # procura o filho mais apto dentro da população e exibe o resultado do algoritmo genético
-    print( 'Resultado {}: {}'.format(i+1, algoritmo_genetico.econtrar_filho_mais_apto()) )
+    print( 'Resultado {}: {}'.format(i+1, algoritmo_genetico.encontrar_filho_mais_apto()) )
 
     # encerra a execução da função main
     return 0
