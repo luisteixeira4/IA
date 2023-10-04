@@ -9,7 +9,7 @@ class AlgoritmoGenetico():
         Algoritmo genético para encontrar o x para o qual a função x^2 - 3x + 4 assume o valor máximo
     """
     def __init__(self, x_min, x_max, tam_populacao, taxa_mutacao, taxa_crossover, num_geracoes):
-        """
+        """                     
             Inicializa todos os atributos da instância
         """
         self.x_min = x_min
@@ -136,7 +136,7 @@ class AlgoritmoGenetico():
 
 def main():
     # cria uma instância do algoritmo genético com as configurações do enunciado
-    algoritmo_genetico = AlgoritmoGenetico(-10, 10, 4, 1, 60, 15)
+    algoritmo_genetico = AlgoritmoGenetico(-10, 10, 15, 1, 60, 15)
     # realiza a avaliação da população inicial
     algoritmo_genetico.avaliar()
     # executa o algoritmo por "num_gerações"
